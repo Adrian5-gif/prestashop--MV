@@ -39,11 +39,6 @@ Lo he hecho en una **máquina virtual con Debian 12**. La máquina se crea con *
 
 En otras prácticas, las máquinas con Ubuntu se me quedaban colgadas al instalar la base de datos. Con Debian 12 y MariaDB me funciona bien, y todo lo que pide la práctica es igual.
 
-### Por qué el zip de PrestaShop no está en el repositorio
-
-Desde la versión 9, PrestaShop ya no se puede descargar desde GitHub: hay que hacerlo desde su web rellenando un formulario. Además, el zip pesa 129 MB y GitHub no deja subir ficheros de más de 100 MB.
-
-Para volver a montar la práctica hay que descargarlo de [prestashop.com](https://www.prestashop.com) y guardarlo en la carpeta del proyecto como `prestashop_9.2.1.zip`.
 
 ### Por qué falta el token de DuckDNS
 
