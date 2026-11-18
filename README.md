@@ -8,17 +8,18 @@ Tienda: https://adrianrios-prestashop.duckdns.org
 ## Índice
 
 1. [Introducción](#1-introducción)
-2. [Cómo es la infraestructura](#2-cómo-es-la-infraestructura)
-3. [Ficheros del repositorio](#3-ficheros-del-repositorio)
-4. [Vagrantfile](#4-vagrantfile)
-5. [Pila LAMP](#5-pila-lamp)
-6. [phpMyAdmin](#6-phpmyadmin)
-7. [Certificado HTTPS](#7-certificado-https)
-8. [Instalación de PrestaShop](#8-instalación-de-prestashop)
-9. [Cómo ponerlo en marcha](#9-cómo-ponerlo-en-marcha)
-10. [Comprobaciones](#10-comprobaciones)
-11. [Problemas que he tenido](#11-problemas-que-he-tenido)
-12. [Conclusión](#12-conclusión)
+2. [Aclaraciones y accesos](#2-aclaraciones-y-accesos)
+3. [Cómo es la infraestructura](#3-cómo-es-la-infraestructura)
+4. [Ficheros del repositorio](#4-ficheros-del-repositorio)
+5. [Vagrantfile](#5-vagrantfile)
+6. [Pila LAMP](#6-pila-lamp)
+7. [phpMyAdmin](#7-phpmyadmin)
+8. [Certificado HTTPS](#8-certificado-https)
+9. [Instalación de PrestaShop](#9-instalación-de-prestashop)
+10. [Cómo ponerlo en marcha](#10-cómo-ponerlo-en-marcha)
+11. [Comprobaciones](#11-comprobaciones)
+12. [Problemas que he tenido](#12-problemas-que-he-tenido)
+13. [Conclusión](#13-conclusión)
 
 ## 1. Introducción
 
@@ -32,7 +33,40 @@ Lo he hecho en una **máquina virtual con Debian 12**. La máquina se crea con *
 - **PrestaShop 9.2.1**, que es la última versión, instalado desde la línea de comandos.
 - **PhpPsInfo**, una herramienta de PrestaShop para comprobar que el servidor cumple los requisitos.
 
-## 2. Cómo es la infraestructura
+## 2. Aclaraciones y accesos
+
+### Por qué Debian y no Ubuntu
+
+En otras prácticas, las máquinas con Ubuntu se me quedaban colgadas al instalar la base de datos. Con Debian 12 y MariaDB me funciona bien, y todo lo que pide la práctica es igual.
+
+### Por qué el zip de PrestaShop no está en el repositorio
+
+Desde la versión 9, PrestaShop ya no se puede descargar desde GitHub: hay que hacerlo desde su web rellenando un formulario. Además, el zip pesa 129 MB y GitHub no deja subir ficheros de más de 100 MB.
+
+Para volver a montar la práctica hay que descargarlo de [prestashop.com](https://www.prestashop.com) y guardarlo en la carpeta del proyecto como `prestashop_9.2.1.zip`.
+
+### Por qué falta el token de DuckDNS
+
+El token es como una contraseña, así que no lo he subido. Para volver a montar la práctica hace falta una cuenta de DuckDNS y guardar el token en `scripts/duckdns_token.txt`.
+
+### Por qué la web solo funciona en mi PC
+
+El dominio apunta a `127.0.0.1`, que es "este mismo ordenador". Desde mi PC, los puertos 80 y 443 llevan a la máquina virtual. Desde otro ordenador no se puede entrar, porque la máquina no está en Internet. Por eso he puesto capturas de todo.
+
+### Accesos
+
+| Qué | Dirección | Usuario | Contraseña |
+|---|---|---|---|
+| Tienda | https://adrianrios-prestashop.duckdns.org | — | — |
+| Panel de administración | https://adrianrios-prestashop.duckdns.org/admin089akeclbcmg8cj5ljq/ | adrian5@iesalbarregas.es | Adrian.Tienda2026 |
+| phpMyAdmin | https://adrianrios-prestashop.duckdns.org/phpmyadmin | pma_admin | pma_password |
+| PhpPsInfo | https://adrianrios-prestashop.duckdns.org/phppsinfo.php | prestashop | prestashop |
+
+La carpeta del panel de administración tiene un nombre raro (`admin089akeclbcmg8cj5ljq`) porque el instalador de PrestaShop le pone letras al azar por seguridad. Si se vuelve a instalar, saldrá otro nombre distinto.
+
+Las contraseñas son de prueba, solo para la práctica. Están en el fichero `scripts/.env`.
+
+## 3. Cómo es la infraestructura
 
 Es una sola máquina:
 
@@ -46,7 +80,7 @@ Es una sola máquina:
 
 El dominio es gratis, de **DuckDNS**, y apunta a `127.0.0.1` (mi propio PC). Desde mi PC, los puertos 80 y 443 llevan a la máquina virtual.
 
-## 3. Ficheros del repositorio
+## 4. Ficheros del repositorio
 
 ```
 Vagrantfile                    -> crea la máquina
@@ -68,7 +102,7 @@ Hay dos ficheros que **no he subido** a GitHub (están en el `.gitignore`):
 - `scripts/duckdns_token.txt`: el token de DuckDNS, que es como una contraseña.
 - El zip de PrestaShop: pesa 129 MB y GitHub no deja subir ficheros de más de 100 MB.
 
-## 4. Vagrantfile
+## 5. Vagrantfile
 
 El Vagrantfile crea la máquina con **Debian 12**, le pone el nombre `AdrianRiosPrestaShop`, le da **2 GB de memoria** y pasa los puertos 80 y 443 de mi PC a la máquina.
 
@@ -79,7 +113,7 @@ Después ejecuta los scripts en este orden:
 3. `setup_letsencrypt_https.sh`
 4. `deploy_prestashop.sh`
 
-## 5. Pila LAMP
+## 6. Pila LAMP
 
 Script: `install_lamp.sh`
 
@@ -107,7 +141,7 @@ Script: `install_lamp.sh`
    | upload_max_filesize | 128M |
    | expose_php | Off |
 
-## 6. phpMyAdmin
+## 7. phpMyAdmin
 
 Script: `install_phpmyadmin.sh`
 
@@ -117,7 +151,7 @@ Script: `install_phpmyadmin.sh`
 
 Se entra desde https://adrianrios-prestashop.duckdns.org/phpmyadmin
 
-## 7. Certificado HTTPS
+## 8. Certificado HTTPS
 
 Script: `setup_letsencrypt_https.sh`
 
@@ -131,7 +165,7 @@ Let's Encrypt normalmente comprueba que el dominio es tuyo **entrando a tu servi
 
 Para esto uso el plugin **`certbot-dns-duckdns`**. Certbot también configura Apache solo y redirige todo de `http://` a `https://`.
 
-## 8. Instalación de PrestaShop
+## 9. Instalación de PrestaShop
 
 Script: `deploy_prestashop.sh`
 
@@ -170,7 +204,7 @@ Script: `deploy_prestashop.sh`
 
    Al terminar, el propio instalador **borra la carpeta `install`** y **cambia el nombre de la carpeta `admin`** por uno con letras al azar. Esto es por seguridad: así nadie puede adivinar dónde está el panel de administración.
 
-## 9. Cómo ponerlo en marcha
+## 10. Cómo ponerlo en marcha
 
 1. Descargar PrestaShop de su web y guardarlo en la carpeta del proyecto como `prestashop_9.2.1.zip`.
 2. Guardar el token de DuckDNS (en PowerShell):
@@ -183,7 +217,7 @@ Script: `deploy_prestashop.sh`
    ```
 4. Abrir https://adrianrios-prestashop.duckdns.org
 
-## 10. Comprobaciones
+## 11. Comprobaciones
 
 ### Instalación de PrestaShop
 
@@ -227,7 +261,7 @@ Apache y MariaDB funcionando dentro de la máquina.
 
 ![Servicios](img/07-servicios.png)
 
-## 11. Problemas que he tenido
+## 12. Problemas que he tenido
 
 **Ubuntu se colgaba.** La guía usa Ubuntu Server, pero en la práctica del balanceador ya vi que en mi portátil las máquinas con Ubuntu se quedaban colgadas al instalar la base de datos. Por eso he usado Debian 12 con MariaDB, que me funciona bien.
 
@@ -235,7 +269,7 @@ Apache y MariaDB funcionando dentro de la máquina.
 
 **El script fallaba al final.** Intentaba borrar la carpeta `install` y cambiar el nombre de `admin`, pero el instalador de PrestaShop 9 ya lo hace solo. Quité esas líneas del script.
 
-## 12. Conclusión
+## 13. Conclusión
 
 Con un solo `vagrant up` se instala todo: la pila LAMP, phpMyAdmin, el HTTPS y PrestaShop.
 
